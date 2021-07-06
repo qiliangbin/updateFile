@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>滚动Percen</title>
+  <style>
+    body{
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+    .active{
+      line-height: 32px;
+      background: #ddd;
+      position: relative;
+    }
+    .title{
+      color: red;
+      font-size: 16px;
+      line-height: 32px;
+      margin: 0 auto;
+    }
+    .precenLine{
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 10px;
+      background: aquamarine;
+      line-height: 0;
+    }
+  </style>
+</head>
+<body>
+  <p class="precenLine"></p>
+  <div class="scroll">
+
+  </div>
+  <script>
+    window.onload = function() {
+      let scroll = document.querySelector('.scroll')
+      let body = document.querySelector('body')
+      let precenLine = document.querySelector('.precenLine')
+      for(let i = 0; i < 100; i++) {
+        let p = document.createElement('p')
+        p.innerHTML = i
+        p.classList.add('active')
+        scroll.appendChild(p)
+      }
+      window.onscroll = (e) => {
+        let scrollHeight = document.documentElement.scrollTop||document.body.scrollTop // 滚动
+        let totalHeight = document.documentElement.scrollHeight || document.body.scrollHeight // 总高度
+        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight // 窗口可视高度
+        let cleanHeight = totalHeight - windowHeight 
+        let precen = (scrollHeight/cleanHeight) * 100
+        // precenLine.innerText = precen
+        precenLine.style.width = precen + '%'
+      }
+    }
+    /**
+     * @desc 
+     *  //关键代码
+     *  窗口净高度是要拿总高度 - 窗口可视高度的
+     *  窗口可视高度：document.documentElement.clientHeight || document.body.clientHeight
+     * @params
+     * 
+    */
+  </script>
+</body>
+</html>
