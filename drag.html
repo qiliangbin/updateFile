@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #app{
+      margin: 0;
+      padding: 0;
+    }
+    #app ul{
+      margin: 0;
+      padding: 0;
+      display: flex;
+      width: 240px;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    #app ul li{
+      width: 70px;
+      height: 70px;
+      border:1px solid #eee;
+      list-style: none;
+      line-height: 70px;
+      font-size: 16px;
+      text-align: center;
+    }
+    #app .dataDiv{
+      position: absolute;
+      width: 300px;
+      right: 10px;
+      top: 0
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="(item,index) in dragList" draggable="true" @click="oriLocal($event)" @dragstart="dragStart($event,index)" @dragEnd="dragEnd($event,index)">
+        {{item.name}}
+      </li>
+    </ul>
+    <div class="dataDiv">
+      {{JSON.stringify(dragList)}}
+    </div>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      name: 'qiliangbin',
+      dragList: [],
+      startX: null,
+      startY: null,
+      endX: null,
+      endY: null,
+      startIndex: null
+    },
+    created(){
+      for(let i = 0; i < 15; i++) {
+        this.addList(i)
+      }
+    },
+    watch: {
+
+    },
+    computed: {
+      
+    },
+    methods: {
+      addList(index){
+        this.dragList.push({
+          name: `${index}`,
+          desc: `描述描述${index}`
+        })
+      },
+      oriLocal(e) {
+        console.log(e)
+      },
+      dragStart(e,index) {
+        this.startX = e.offsetX
+        this.startY = e.offsetY
+        this.startIndex = index
+      },
+      dragEnd(e,index) {
+        this.endX = e.offsetX
+        this.endY = e.offsetY
+        this.dragDistance(index)
+      },
+      dragDistance(index){
+        /**
+         * @params {index} 当前拖拽的traget坐标
+         * @params {width} 当前拖拽元素的宽
+         * @params {height}} 当前拖拽元素的高
+        */
+        var differOffsetX = this.endX - this.startX
+        var differOffsetY = this.endY - this.startY
+        let moveDistanceX = Math.floor(differOffsetX/70)
+        let moveDistanceY = Math.floor(differOffsetY/70)
+        //往前推
+        if(moveDistanceX > 0 &&  moveDistanceX < 4){
+          try{
+            let i = moveDistanceY*3 + moveDistanceX
+            let tempOption = this.dragList[index+i];
+            this.$set(this.dragList, index + i, this.dragList[index]);
+            this.$set(this.dragList, index, tempOption)
+          } catch{
+            console.log('过界啦～')
+          }
+        } 
+        let moveBackX = Math.ceil(differOffsetX/70)
+        let moveBackY = Math.ceil(differOffsetY/70)
+        console.log(moveBackX,moveBackY)
+        if(moveBackX < 0) {
+        //后退
+          try{
+            let i = +moveBackY*3 + moveBackX
+            let item =  this.dragList[index - i]
+            this.$set(this.dragList, index - i, this.dragList[index]);
+            this.$set(this.dragList, index, item)
+          } catch{
+            let i = +moveBackY*3 + (+moveBackX)
+            console.log(i)
+          }
+        }
+      }
+    }
+  })
+  /**
+   * @tip
+      obj.clientWidth //获取元素的宽度（width+padding）
+      obj.clientHeight //元素的高度
+      obj.offsetLeft //元素相对于父元素的left
+      obj.offsetTop //元素相对于父元素的top
+      obj.offsetWidth //元素的宽度(width+padding+border)
+      obj.offsetHeight //元素的高度
+  */
+</script>
+</html>
