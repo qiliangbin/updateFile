@@ -99,34 +99,26 @@
         */
         var differOffsetX = this.endX - this.startX
         var differOffsetY = this.endY - this.startY
-        let moveDistanceX = Math.floor(differOffsetX/70)
-        let moveDistanceY = Math.floor(differOffsetY/70)
-        //往前推
-        if(moveDistanceX > 0 &&  moveDistanceX < 4){
-          try{
-            let i = moveDistanceY*3 + moveDistanceX
+        let moveDistanceX = Math.round(differOffsetX/70)
+        let moveDistanceY = Math.round(differOffsetY/70)
+        try{
+          let i = moveDistanceY*3 + moveDistanceX
+          // if(i>0) {
+            //往前推
             let tempOption = this.dragList[index+i];
             this.$set(this.dragList, index + i, this.dragList[index]);
             this.$set(this.dragList, index, tempOption)
-          } catch{
-            console.log('过界啦～')
-          }
-        } 
-        let moveBackX = Math.ceil(differOffsetX/70)
-        let moveBackY = Math.ceil(differOffsetY/70)
-        console.log(moveBackX,moveBackY)
-        if(moveBackX < 0) {
-        //后退
-          try{
-            let i = +moveBackY*3 + moveBackX
-            let item =  this.dragList[index - i]
-            this.$set(this.dragList, index - i, this.dragList[index]);
-            this.$set(this.dragList, index, item)
-          } catch{
-            let i = +moveBackY*3 + (+moveBackX)
-            console.log(i)
-          }
+          // } else if(i<0){
+            // 后退
+            // let item = this.dragList[index + i]
+            // this.$set(this.dragList, index + i, this.dragList[index])
+            // this.$set(this.dragList, index, item)
+          // }
+        } catch{
+          console.log('过界啦～')
         }
+        console.log('\nX:',moveDistanceX,'\nY:',moveDistanceY, '\nBOSS:', moveDistanceY*3 + moveDistanceX)
+        
       }
     }
   })
@@ -138,6 +130,15 @@
       obj.offsetTop //元素相对于父元素的top
       obj.offsetWidth //元素的宽度(width+padding+border)
       obj.offsetHeight //元素的高度
+
+    @tip
+      Math.round() 四舍五入
+        double d5 = -16.5;
+        double d6 = 16.5;
+        long round5 = Math.round(d5);   // 结果 -16
+        long round6 = Math.round(d6);   // 结果 17
+      Math.ceil() 向上取整
+      Math.floor() 向下取整
   */
 </script>
 </html>
